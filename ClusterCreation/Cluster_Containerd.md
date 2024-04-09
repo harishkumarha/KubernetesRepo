@@ -110,9 +110,6 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-# Test access to cluster:
-kubectl get nodes
-
 # Join the Worker Nodes to the Cluster(run this cmd on master node)
 
 kubeadm token create --print-join-command
