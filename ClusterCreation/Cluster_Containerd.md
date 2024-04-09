@@ -7,19 +7,19 @@ az group create --name k8s-rg --location eastus
 
 # Create Master Node:
  ```bash
- az vm create --resource-group k8s-rg --admin-username azureuser  --authentication-type password --name master --image Ubuntu2204 --public-ip-address "" --size  Standard_D2s_v3
+ az vm create --resource-group k8s-rg --admin-username azureuser  --authentication-type password --name master --image Ubuntu2204 --public-ip-address "masterpub" --size  Standard_D2s_v3
  ```
 
 # Create Worker Node:
 ```bash
-az vm create --resource-group k8s-rg --admin-username azureuser  --authentication-type password --name worker-01 --image Ubuntu2204 --public-ip-address "" --size  Standard_D2s_v3
+az vm create --resource-group k8s-rg --admin-username azureuser  --authentication-type password --name worker-01 --image Ubuntu2204 --public-ip-address "worker01-pub" --size  Standard_D2s_v3
 ```
 
 # Install Packages ( The following steps must be performed on all two nodes):
 ```bash
 sudo apt update
 sudo apt upgrade
-sudo swapoff -a(disable swapoff)
+sudo swapoff -a
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 ```
 
@@ -98,3 +98,36 @@ sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
 
+# Initialize Kubernetes Cluster with Kubeadm (master node):
+
+sudo kubeadm init
+
+# Set kubectl access:
+
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+# Test access to cluster:
+kubectl get nodes
+
+# Join the Worker Nodes to the Cluster(run this cmd on master node)
+
+kubeadm token create --print-join-command
+
+example:- kubeadm join 10.0.0.4:6443 --token 5b74ci.fy1p46z095xizzmr --discovery-token-ca-cert-hash sha256:984bfad396cde3ad762ff416b74e3f0c9a1fb164efd5c4db57ec63de1e869f0c
+
+
+# In the worker nodes, paste the kubeadm join command to join the cluster. Use sudo to run it as root:
+
+kubeadm join 10.0.0.4:6443 --token 5b74ci.fy1p46z095xizzmr --discovery-token-ca-cert-hash sha256:984bfad396cde3ad762ff416b74e3f0c9a1fb164efd5c4db57ec63de1e869f0c
+
+# Install Kubernetes Network Plugin (master node):
+
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+
+
+# Check status of the Cluster(master node):
+kubectl get nodes
