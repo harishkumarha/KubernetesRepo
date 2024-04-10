@@ -23,4 +23,18 @@ spec:
     ports:
     - containerPort: 80
 ```
+## Create the the Pod
+```html
+kubectl apply -f https://raw.githubusercontent.com/harishkumarha/KubernetesRepo/main/pods/pod.yml
+```
 
+### Working with the Pods
+
+* kubectl get pods
+* kubectl describe pods/POD_NAME
+* kubectl exec -it POD_NAME bash
+* kubectl logs POD_NAME 
+
+# Refer the official Kubernetes documentaion for working with Pods
+
+[Kuberneets documentation for Pod]("https://kubernetes.io/docs/concepts/workloads/pods/")
