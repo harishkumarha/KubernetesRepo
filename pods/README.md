@@ -37,7 +37,4 @@ kubectl apply -f https://raw.githubusercontent.com/harishkumarha/KubernetesRepo/
 
 # Refer the official Kubernetes documentaion for working with Pods
 
-[Kubernetes documentation for Pod][def]
-
-
-[def]: "https://kubernetes.io/docs/concepts/workloads/pods/"
+[Kubernetes documentation for Pod](https://kubernetes.io/docs/concepts/workloads/pods/)
